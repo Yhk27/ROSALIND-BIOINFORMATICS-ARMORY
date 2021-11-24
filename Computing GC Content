@@ -10,3 +10,42 @@
 # Return: The ID of the string having the highest GC-content, followed by the GC-content of that string. Rosalind allows for a default error of 0.001 in all decimal answers unless otherwise stated; please see the note on absolute error below.
 #
 
+def Compute_GC (seq):
+	GC = 0
+	total = 0
+	for i in range(0, len(seq)):
+		if seq[i] in ['A','T','G','C']:
+			total = total +1
+		if seq[i] in ['G', 'C']:
+			GC = GC+1
+	return float(GC)/total*100
+
+def getMaxIndex(my_list):
+    max = my_list[0]
+    for i in my_list:
+        if i > max:
+            max = i
+    return my_list.index(max)
+
+file = open('rosalind_gc.txt','r')
+id = list()
+GC = list()
+long_seq = ''
+nowlen = 1
+for seq in file.readlines():
+
+		if (seq.startswith('>')):
+			id.append(seq.lstrip('>'))
+		else:
+			seq = seq.rstrip('\n')
+			long_seq = long_seq+seq
+		
+		if(len(id) > nowlen):
+			nowlen = len(id)
+			GC.append(Compute_GC(long_seq))
+			long_seq = ''
+GC.append(Compute_GC(long_seq))
+
+no = getMaxIndex(GC)
+print(id[no])
+print("%.6f"%GC[no])
